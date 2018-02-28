@@ -358,8 +358,9 @@ export default class MulipleLineChart extends Component {
           this.AnimatedPoints[i] = createCircleProps (d, dataPointsColor[i]);
           text = (
             <Text
+              fill={dataPointsColor[i]}
               fontSize={chartFontSize}
-              x={xScale (d.x) + 10}
+              x={xScale (d.x) + 8}
               y={yScale (d.y) + 5}
             >
               {pointDataToShowOnGraph == 'Y'

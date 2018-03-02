@@ -376,8 +376,20 @@ export default class MulipleLineChart extends Component {
                     key={'circle_' + i}
                     {...this.AnimatedPoints[i]}
                   />
-                : <Circle
-                    key={'circle_' + i}
+                : <G key={'circle_' + i}>
+                    <Circle
+                    strokeWidth={circleRadiusWidth}
+                    stroke={'transparent'}
+                    d={d.x}
+                    fill={'transparent'}
+                    cx={xScale (d.x) + 10}
+                    cy={yScale (d.y)}
+                    r={this.props.circleTouhRadius}
+                    onPress={() => {
+                      this.props.circleOnpress(d, xScale (d.x), yScale (d.y))
+                    }}
+                  />
+                    <Circle
                     strokeWidth={circleRadiusWidth}
                     stroke={dataPointsColor[i]}
                     d={d.x}
@@ -385,7 +397,9 @@ export default class MulipleLineChart extends Component {
                     cx={xScale (d.x) + 10}
                     cy={yScale (d.y)}
                     r={circleRadius}
-                  />}
+                  />
+                  </G>
+                }
               {text}
             </G>
           );

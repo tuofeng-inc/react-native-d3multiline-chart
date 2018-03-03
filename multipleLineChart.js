@@ -342,17 +342,17 @@ export default class MulipleLineChart extends Component {
                   <Path
                     strokeOpacity={lineStrokeOpacity}
                     strokeDasharray={showDashedLine ? lineStrokeDashArray[i] : ''}
-                    d={data}
-                    fill={fillArea ? 'transparent' : 'none'}
-                    stroke={Color[i] ? Color[i] : '#000'}
+                    d={`${data}L${lastPointArr[0]},40`}
+                    fill={fillArea ? this.props.fillColor : 'none'}
+                    stroke={Color[i] ? 'transparent' : '#000'}
                     strokeWidth={lineWidth}
                   />
                   <Path
                     strokeOpacity={lineStrokeOpacity}
                     strokeDasharray={showDashedLine ? lineStrokeDashArray[i] : ''}
-                    d={`${data}L${lastPointArr[0]},40`}
-                    fill={fillArea ? this.props.fillColor : 'none'}
-                    stroke={Color[i] ? 'transparent' : '#000'}
+                    d={data}
+                    fill={fillArea ? 'transparent' : 'none'}
+                    stroke={Color[i] ? Color[i] : '#000'}
                     strokeWidth={lineWidth}
                   />
                 </G>

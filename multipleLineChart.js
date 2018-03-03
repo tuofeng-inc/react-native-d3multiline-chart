@@ -413,7 +413,7 @@ export default class MulipleLineChart extends Component {
                       cx={xScale (d.x) + 10}
                       cy={yScale (d.y)}
                       r={this.props.circleTouhRadius}
-                      onPress={() => {
+                      onPressIn={() => {
                         this.props.circleOnpress(d, xScale (d.x), yScale (d.y))
                       }}
                     />

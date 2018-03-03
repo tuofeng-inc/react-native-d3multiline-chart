@@ -35,7 +35,7 @@ var WIDTH = 380,
 function createLineProps (path) {
   const properties = svgPathProperties (path);
   const length = properties.getTotalLength ();
-  console.log ('the length', length);
+  // console.log ('the length', length);
   return {
     d: path,
     strokeDashoffset: new Animated.Value (length),
@@ -117,7 +117,7 @@ export default class MulipleLineChart extends Component {
     let counter = 0;
     this.lineAnimated.forEach ((element, j) => {
       let staggerCircle = [];
-      console.log ('the counter is', counter);
+      // console.log ('the counter is', counter);
       for (let k = counter; k < data[j].length + counter; k++) {
         staggerCircle.push (
           Animated.spring (this.AnimatedPoints[k].r, {
@@ -335,16 +335,27 @@ export default class MulipleLineChart extends Component {
               );
             })
           : _.map (linePointsData, (data, i) => {
+              const dataArr = data.split('L')
+              const lastPointArr = dataArr[dataArr.length - 1].split(',')
               return (
-                <Path
-                  strokeOpacity={lineStrokeOpacity}
-                  strokeDasharray={showDashedLine ? lineStrokeDashArray[i] : ''}
-                  key={i}
-                  d={data}
-                  fill={fillArea ? (Color[i] ? Color[i] : '#000') : 'none'}
-                  stroke={Color[i] ? Color[i] : '#000'}
-                  strokeWidth={lineWidth}
-                />
+                <G key={i}>
+                  <Path
+                    strokeOpacity={lineStrokeOpacity}
+                    strokeDasharray={showDashedLine ? lineStrokeDashArray[i] : ''}
+                    d={data}
+                    fill={fillArea ? 'transparent' : 'none'}
+                    stroke={Color[i] ? Color[i] : '#000'}
+                    strokeWidth={lineWidth}
+                  />
+                  <Path
+                    strokeOpacity={lineStrokeOpacity}
+                    strokeDasharray={showDashedLine ? lineStrokeDashArray[i] : ''}
+                    d={`${data}L${lastPointArr[0]},40`}
+                    fill={fillArea ? this.props.fillColor : 'none'}
+                    stroke={Color[i] ? 'transparent' : '#000'}
+                    strokeWidth={lineWidth}
+                  />
+                </G>
               );
             });
     let dataPointsColor = buildColorArray (data, Color);
@@ -368,7 +379,7 @@ export default class MulipleLineChart extends Component {
                 : pointDataToShowOnGraph == 'X' ? d.x : ''}
             </Text>
           );
-          console.log ('the anim points are', this.AnimatedPoints[i]);
+          // console.log ('the anim points are', this.AnimatedPoints[i]);
           return (
             <G key={i}>
               {animation
@@ -378,26 +389,26 @@ export default class MulipleLineChart extends Component {
                   />
                 : <G key={'circle_' + i}>
                     <Circle
-                    strokeWidth={circleRadiusWidth}
-                    stroke={'transparent'}
-                    d={d.x}
-                    fill={'transparent'}
-                    cx={xScale (d.x) + 10}
-                    cy={yScale (d.y)}
-                    r={this.props.circleTouhRadius}
-                    onPress={() => {
-                      this.props.circleOnpress(d, xScale (d.x), yScale (d.y))
-                    }}
-                  />
+                      strokeWidth={circleRadiusWidth}
+                      stroke={dataPointsColor[i]}
+                      d={d.x}
+                      fill={'white'}
+                      cx={xScale (d.x) + 10}
+                      cy={yScale (d.y)}
+                      r={circleRadius}
+                    />
                     <Circle
-                    strokeWidth={circleRadiusWidth}
-                    stroke={dataPointsColor[i]}
-                    d={d.x}
-                    fill={'white'}
-                    cx={xScale (d.x) + 10}
-                    cy={yScale (d.y)}
-                    r={circleRadius}
-                  />
+                      strokeWidth={circleRadiusWidth}
+                      stroke={'transparent'}
+                      d={d.x}
+                      fill={'transparent'}
+                      cx={xScale (d.x) + 10}
+                      cy={yScale (d.y)}
+                      r={this.props.circleTouhRadius}
+                      onPress={() => {
+                        this.props.circleOnpress(d, xScale (d.x), yScale (d.y))
+                      }}
+                    />
                   </G>
                 }
               {text}
@@ -448,9 +459,9 @@ export default class MulipleLineChart extends Component {
     return (
       <Svg width={GraphWidth} height={GraphHeight}>
         <G>
+          {linePathOne}
           {yCoordinate}
           {xCoordinate}
-          {linePathOne}
           {circleInFirstLine}
           {legend}
         </G>

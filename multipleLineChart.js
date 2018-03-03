@@ -337,12 +337,20 @@ export default class MulipleLineChart extends Component {
           : _.map (linePointsData, (data, i) => {
               const dataArr = data.split('L')
               const lastPointArr = dataArr[dataArr.length - 1].split(',')
+              const fillData = dataArr.reduce((d, item, index) => {
+                if (index === 0) {
+                  return `${d}${item.replace('M', 'L')}`
+                } else {
+                  return `${d}L${item}`
+                }
+              }, 'M40,40') + `L${lastPointArr[0]},40`
+
               return (
                 <G key={i}>
                   <Path
                     strokeOpacity={lineStrokeOpacity}
                     strokeDasharray={showDashedLine ? lineStrokeDashArray[i] : ''}
-                    d={`${data}L${lastPointArr[0]},40`}
+                    d={fillData}
                     fill={fillArea ? this.props.fillColor : 'none'}
                     stroke={Color[i] ? 'transparent' : '#000'}
                     strokeWidth={lineWidth}

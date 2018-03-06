@@ -383,7 +383,7 @@ export default class MulipleLineChart extends Component {
               y={yScale (d.y) + 5}
             >
               {pointDataToShowOnGraph == 'Y'
-                ? d.y
+                ? (this.props.showPointDataOnGraph ? d.y : '')
                 : pointDataToShowOnGraph == 'X' ? d.x : ''}
             </Text>
           );

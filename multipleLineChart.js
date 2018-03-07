@@ -26,7 +26,7 @@ var linePathOne,
 var WIDTH = 380,
   HEIGHT = 380,
   MARGINS = {
-    top: 20,
+    top: 0,
     right: 20,
     bottom: 20,
     left: 30,
@@ -250,7 +250,7 @@ export default class MulipleLineChart extends Component {
                     fontSize={chartFontSize}
                     textAnchor="middle"
                     x={inclindTick ? xScale (d) - 2 : xScale (d) + 10}
-                    y={chartHeight + 10}
+                    y={chartHeight + 5}
                   >
                     {bottomAxisDataToShow[i]}
                   </Text>
@@ -343,7 +343,7 @@ export default class MulipleLineChart extends Component {
                 } else {
                   return `${d}L${item}`
                 }
-              }, `M40,${this.props.chartHeight - 20}`) + `L${lastPointArr[0]},${this.props.chartHeight - 20}`
+              }, `M40,${this.props.chartHeight - 0}`) + `L${lastPointArr[0]},${this.props.chartHeight - 0}`
 
               return (
                 <G key={i}>
@@ -379,8 +379,8 @@ export default class MulipleLineChart extends Component {
             <Text
               fill={dataPointsColor[i]}
               fontSize={chartFontSize}
-              x={xScale (d.x) + 8}
-              y={yScale (d.y) + 5}
+              x={xScale (d.x) + 7}
+              y={yScale (d.y) - 18}
             >
               {pointDataToShowOnGraph == 'Y'
                 ? (this.props.showPointDataOnGraph ? d.y : '')

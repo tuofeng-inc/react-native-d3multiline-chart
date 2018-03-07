@@ -343,7 +343,7 @@ export default class MulipleLineChart extends Component {
                 } else {
                   return `${d}L${item}`
                 }
-              }, `M40,${this.props.chartHeight - 0}`) + `L${lastPointArr[0]},${this.props.chartHeight - 0}`
+              }, `M40,${this.props.chartHeight}`) + `L${lastPointArr[0]},${this.props.chartHeight}`
 
               return (
                 <G key={i}>

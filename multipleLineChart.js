@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Animated} from 'react-native';
+import {StyleSheet, View, Animated, TouchableOpacity} from 'react-native';
 import Svg, {Circle, Line, G, Path, Text, Rect} from 'react-native-svg';
 import * as d3 from 'd3';
 import * as scale from 'd3-scale';
@@ -21,6 +21,7 @@ var linePathOne,
   yCoordinate,
   pointsOnLine,
   circleInFirstLine,
+  circleTouch,
   circleInSecondLine,
   legend;
 
@@ -350,48 +351,56 @@ export default class MulipleLineChart extends Component {
             });
     linePathFill = scatterPlotEnable
       ? null
-      : animation
-          ? _.map (linePointsData, (data, i) => {
-              this.lineAnimated[i] = createLineProps (data);
-              return (
-                <NativePath
-                  {...this.lineAnimated[i]}
-                  strokeOpacity={lineStrokeOpacity}
-                  key={i}
-                  fill={'none'}
-                  stroke={Color[i] ? Color[i] : '#000'}
-                  strokeWidth={lineWidth}
-                />
-              );
-            })
-          : _.map (linePointsData, (data, i) => {
-              const dataArr = data.split('L')
-              const lastPointArr = dataArr[dataArr.length - 1].split(',')
-              const fillData = dataArr.reduce((d, item, index) => {
-                if (index === 0) {
-                  return `${d}${item.replace('M', 'L')}`
-                } else {
-                  return `${d}L${item}`
-                }
-              }, `M40,${this.props.chartHeight}`) + `L${lastPointArr[0]},${this.props.chartHeight}`
+      : _.map (linePointsData, (data, i) => {
+          let fillData = data
+          const dataArr = data.split('L')
+          if (dataArr.length > 1) {
+            const lastPointArr = dataArr[dataArr.length - 1].split(',')
+            fillData = dataArr.reduce((d, item, index) => {
+              if (index === 0) {
+                return `${d}${item.replace('M', 'L')}`
+              } else {
+                return `${d}L${item}`
+              }
+            }, `M40,${this.props.chartHeight}`) + `L${lastPointArr[0]},${this.props.chartHeight}`
+          }
 
-              return (
-                <Path
-                  key={i}
-                  strokeOpacity={lineStrokeOpacity}
-                  strokeDasharray={showDashedLine ? lineStrokeDashArray[i] : ''}
-                  d={fillData}
-                  fill={fillArea ? this.props.fillColor : 'none'}
-                  stroke={Color[i] ? 'transparent' : '#000'}
-                  strokeWidth={lineWidth}
-                />
-              );
-            });
+          return (
+            <Path
+              key={i}
+              strokeOpacity={lineStrokeOpacity}
+              strokeDasharray={showDashedLine ? lineStrokeDashArray[i] : ''}
+              d={fillData}
+              fill={fillArea ? this.props.fillColor : 'none'}
+              stroke={Color[i] ? 'transparent' : '#000'}
+              strokeWidth={lineWidth}
+            />
+          );
+        });
     let dataPointsColor = buildColorArray (data, Color);
 
     let pointData = calculateOverallLineChartData (data);
     this.AnimatedPoints = new Array (pointData.length);
     // console.log ('the anim points are', this.AnimatedPoints[0]);
+    circleTouch = dataPointsVisible
+      ? _.map (pointData, (d, i) => {
+          return (
+            <TouchableOpacity
+              key={'circleTouch_' + i}
+              style={{ 
+                position: 'absolute', 
+                marginLeft: (xScale (d.x) + 10) - (this.props.circleTouhRadius / 2), 
+                marginTop: yScale (d.y) - (this.props.circleTouhRadius / 2), 
+                width: this.props.circleTouhRadius, 
+                height: this.props.circleTouhRadius, 
+                backgroundColor: 'transparent' }}
+              onPress={() => {
+                this.props.circleOnpress(d, xScale (d.x), yScale (d.y))
+              }}
+            />
+          );
+        })
+      : null;
     circleInFirstLine = dataPointsVisible
       ? _.map (pointData, (d, i) => {
           let text;
@@ -416,29 +425,16 @@ export default class MulipleLineChart extends Component {
                     key={'circle_' + i}
                     {...this.AnimatedPoints[i]}
                   />
-                : <G key={'circle_' + i}>
-                    <Circle
-                      strokeWidth={circleRadiusWidth}
-                      stroke={dataPointsColor[i]}
-                      d={d.x}
-                      fill={'white'}
-                      cx={xScale (d.x) + 10}
-                      cy={yScale (d.y)}
-                      r={circleRadius}
-                    />
-                    <Circle
-                      strokeWidth={circleRadiusWidth}
-                      stroke={'transparent'}
-                      d={d.x}
-                      fill={'transparent'}
-                      cx={xScale (d.x) + 10}
-                      cy={yScale (d.y)}
-                      r={this.props.circleTouhRadius}
-                      onPressIn={() => {
-                        this.props.circleOnpress(d, xScale (d.x), yScale (d.y))
-                      }}
-                    />
-                  </G>
+                : <Circle
+                    key={'circle_' + i}
+                    strokeWidth={circleRadiusWidth}
+                    stroke={dataPointsColor[i]}
+                    d={d.x}
+                    fill={'white'}
+                    cx={xScale (d.x) + 10}
+                    cy={yScale (d.y)}
+                    r={circleRadius}
+                  />
                 }
               {text}
             </G>
@@ -486,16 +482,19 @@ export default class MulipleLineChart extends Component {
     this.treeManipulation ();
     const {GraphWidth, GraphHeight} = this.props;
     return (
-      <Svg width={GraphWidth} height={GraphHeight}>
-        <G>
-          {linePathFill}
-          {linePathOne}
-          {yCoordinate}
-          {xCoordinate}
-          {circleInFirstLine}
-          {legend}
-        </G>
-      </Svg>
+      <View>
+        <Svg width={GraphWidth} height={GraphHeight}>
+          <G>
+            {linePathFill}
+            {linePathOne}
+            {yCoordinate}
+            {xCoordinate}
+            {circleInFirstLine}
+            {legend}
+          </G>
+        </Svg>
+        {circleTouch}
+      </View>
     );
   }
 }

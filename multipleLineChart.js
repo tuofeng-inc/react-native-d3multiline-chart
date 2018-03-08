@@ -15,6 +15,7 @@ import {
 import {dummyData, leftAxisData, bottomAxisData} from './dummyData';
 
 var linePathOne,
+  linePathFill,
   linePathSecond,
   xCoordinate,
   yCoordinate,
@@ -335,6 +336,35 @@ export default class MulipleLineChart extends Component {
               );
             })
           : _.map (linePointsData, (data, i) => {
+              return (
+                <Path
+                  key={i}
+                  strokeOpacity={lineStrokeOpacity}
+                  strokeDasharray={showDashedLine ? lineStrokeDashArray[i] : ''}
+                  d={data}
+                  fill={fillArea ? 'transparent' : 'none'}
+                  stroke={Color[i] ? Color[i] : '#000'}
+                  strokeWidth={lineWidth}
+                />
+              );
+            });
+    linePathFill = scatterPlotEnable
+      ? null
+      : animation
+          ? _.map (linePointsData, (data, i) => {
+              this.lineAnimated[i] = createLineProps (data);
+              return (
+                <NativePath
+                  {...this.lineAnimated[i]}
+                  strokeOpacity={lineStrokeOpacity}
+                  key={i}
+                  fill={'none'}
+                  stroke={Color[i] ? Color[i] : '#000'}
+                  strokeWidth={lineWidth}
+                />
+              );
+            })
+          : _.map (linePointsData, (data, i) => {
               const dataArr = data.split('L')
               const lastPointArr = dataArr[dataArr.length - 1].split(',')
               const fillData = dataArr.reduce((d, item, index) => {
@@ -346,24 +376,15 @@ export default class MulipleLineChart extends Component {
               }, `M40,${this.props.chartHeight}`) + `L${lastPointArr[0]},${this.props.chartHeight}`
 
               return (
-                <G key={i}>
-                  <Path
-                    strokeOpacity={lineStrokeOpacity}
-                    strokeDasharray={showDashedLine ? lineStrokeDashArray[i] : ''}
-                    d={fillData}
-                    fill={fillArea ? this.props.fillColor : 'none'}
-                    stroke={Color[i] ? 'transparent' : '#000'}
-                    strokeWidth={lineWidth}
-                  />
-                  <Path
-                    strokeOpacity={lineStrokeOpacity}
-                    strokeDasharray={showDashedLine ? lineStrokeDashArray[i] : ''}
-                    d={data}
-                    fill={fillArea ? 'transparent' : 'none'}
-                    stroke={Color[i] ? Color[i] : '#000'}
-                    strokeWidth={lineWidth}
-                  />
-                </G>
+                <Path
+                  key={i}
+                  strokeOpacity={lineStrokeOpacity}
+                  strokeDasharray={showDashedLine ? lineStrokeDashArray[i] : ''}
+                  d={fillData}
+                  fill={fillArea ? this.props.fillColor : 'none'}
+                  stroke={Color[i] ? 'transparent' : '#000'}
+                  strokeWidth={lineWidth}
+                />
               );
             });
     let dataPointsColor = buildColorArray (data, Color);
@@ -467,6 +488,7 @@ export default class MulipleLineChart extends Component {
     return (
       <Svg width={GraphWidth} height={GraphHeight}>
         <G>
+          {linePathFill}
           {linePathOne}
           {yCoordinate}
           {xCoordinate}

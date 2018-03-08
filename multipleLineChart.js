@@ -188,6 +188,7 @@ export default class MulipleLineChart extends Component {
       circleLegendType,
       fillArea,
       animation,
+      GraphWidth,
     } = this.props;
     const {
       yAxisGrid,
@@ -245,13 +246,19 @@ export default class MulipleLineChart extends Component {
           {hideXAxisLabels
             ? null
             : _.map (bottomAxisData, function (d, i) {
+                let x1 = xScale (d) - 2
+                let x2 = xScale (d) + 10
+                if (bottomAxisDataToShow.length === 1) {
+                  x1 = x1 + ((GraphWidth - 50) / 2)
+                  x2 = x2 + ((GraphWidth - 50) / 2)
+                }
                 return (
                   <Text
                     key={i}
                     fill={axisLabelColor}
                     fontSize={chartFontSize}
                     textAnchor="middle"
-                    x={inclindTick ? xScale (d) - 2 : xScale (d) + 10}
+                    x={inclindTick ? x1 : x2}
                     y={chartHeight + 5}
                   >
                     {bottomAxisDataToShow[i]}
@@ -384,18 +391,22 @@ export default class MulipleLineChart extends Component {
     // console.log ('the anim points are', this.AnimatedPoints[0]);
     circleTouch = dataPointsVisible
       ? _.map (pointData, (d, i) => {
+          let circleX = xScale (d.x) + 10
+          if (data.length === dataPointsColor.length) {
+            circleX = circleX + ((GraphWidth - 50) / 2)
+          }
           return (
             <TouchableOpacity
               key={'circleTouch_' + i}
               style={{ 
                 position: 'absolute', 
-                marginLeft: (xScale (d.x) + 10) - (this.props.circleTouhRadius / 2), 
+                marginLeft: circleX - (this.props.circleTouhRadius / 2), 
                 marginTop: yScale (d.y) - (this.props.circleTouhRadius / 2), 
                 width: this.props.circleTouhRadius, 
                 height: this.props.circleTouhRadius, 
                 backgroundColor: 'transparent' }}
               onPress={() => {
-                this.props.circleOnpress(d, xScale (d.x), yScale (d.y))
+                this.props.circleOnpress(d, circleX - 10, yScale (d.y))
               }}
             />
           );
@@ -405,11 +416,17 @@ export default class MulipleLineChart extends Component {
       ? _.map (pointData, (d, i) => {
           let text;
           this.AnimatedPoints[i] = createCircleProps (d, dataPointsColor[i]);
+          let textX = xScale (d.x) + 7
+          let circleX = xScale (d.x) + 10
+          if (data.length === dataPointsColor.length) {
+            textX = textX + ((GraphWidth - 50) / 2)
+            circleX = circleX + ((GraphWidth - 50) / 2)
+          }
           text = (
             <Text
               fill={dataPointsColor[i]}
               fontSize={chartFontSize}
-              x={xScale (d.x) + 7}
+              x={textX}
               y={yScale (d.y) - 18}
             >
               {pointDataToShowOnGraph == 'Y'
@@ -431,7 +448,7 @@ export default class MulipleLineChart extends Component {
                     stroke={dataPointsColor[i]}
                     d={d.x}
                     fill={'white'}
-                    cx={xScale (d.x) + 10}
+                    cx={circleX}
                     cy={yScale (d.y)}
                     r={circleRadius}
                   />

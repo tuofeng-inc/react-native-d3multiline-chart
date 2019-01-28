@@ -1,6 +1,6 @@
 {
-  "name": "react-native-d3multiline-chart",
-  "version": "1.0.22",
+  "name": "@tuofeng/react-native-d3multiline-chart",
+  "version": "1.0.23",
   "description": "Android and iOS multipleline/line/scatter chart based on d3.js, change and use for tuofeng",
   "main": "source.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/codesinghanoop/react-native-d3multiline-chart.git"
+    "url": "git+https://github.com/tuofeng-inc/react-native-d3multiline-chart.git"
   },
   "keywords": [
     "animated",
@@ -29,12 +29,14 @@
   "author": "Anoop Singh (anoop100singh@gmail.com)",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/codesinghanoop/react-native-d3multiline-chart/issues"
+    "url": "https://github.com/tuofeng-inc/react-native-d3multiline-chart/issues"
   },
-  "homepage": "https://github.com/codesinghanoop/react-native-d3multiline-chart#readme",
+  "homepage": "https://github.com/tuofeng-inc/react-native-d3multiline-chart#readme",
   "dependencies": {
     "d3": "4.10.0",
-    "d3-shape": "^1.2.0",
-    "react-native-svg": "^5.4.1"
+    "d3-shape": "^1.2.0"
+  },
+  "peerDependencies": {
+    "react-native-svg": ">5.4.1"
   }
 }
